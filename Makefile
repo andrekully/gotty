@@ -4,7 +4,7 @@ VERSION = 2.0.0-alpha.3
 BUILD_OPTIONS = -ldflags "-X main.Version=$(VERSION) -X main.CommitID=$(GIT_COMMIT)"
 
 gotty: main.go server/*.go webtty/*.go backend/*.go Makefile
-	godep go build ${BUILD_OPTIONS}
+	go build ${BUILD_OPTIONS}
 
 .PHONY: asset
 asset: bindata/static/js/gotty-bundle.js bindata/static/index.html bindata/static/favicon.png bindata/static/css/index.css bindata/static/css/xterm.css bindata/static/css/xterm_customize.css
@@ -67,7 +67,7 @@ test:
 	if [ `go fmt $(go list ./... | grep -v /vendor/) | wc -l` -gt 0 ]; then echo "go fmt error"; exit 1; fi
 
 cross_compile:
-	GOARM=5 gox -os="darwin linux freebsd netbsd openbsd" -arch="386 amd64 arm" -osarch="!darwin/arm" -output "${OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
+	GOARM=5 gox -os="darwin linux freebsd netbsd openbsd" -arch="amd64 arm" -osarch="!darwin/arm" -output "${OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}" ${BUILD_OPTIONS}
 
 targz:
 	mkdir -p ${OUTPUT_DIR}/dist
